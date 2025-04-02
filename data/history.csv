@@ -1,0 +1,10 @@
+title,rating,genres,method
+Toy Story (1995),1.0,Adventure|Animation|Children|Comedy|Fantasy,KNN
+Grumpier Old Men (1995),3.5,Comedy|Romance,KNN
+Heat (1995),5.0,Action|Crime|Thriller,KNN
+Toy Story (1995),1.0,Adventure|Animation|Children|Comedy|Fantasy,KNN
+Grumpier Old Men (1995),3.5,Comedy|Romance,KNN
+Heat (1995),5.0,Action|Crime|Thriller,KNN
+Toy Story (1995),1.0,Adventure|Animation|Children|Comedy|Fantasy,SVD
+Grumpier Old Men (1995),0.5,Comedy|Romance,SVD
+Heat (1995),5.0,Action|Crime|Thriller,SVD
