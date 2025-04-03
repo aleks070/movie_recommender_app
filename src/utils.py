@@ -1,3 +1,9 @@
+"""
+Created on Tue Apr  1 23:09:33 2025
+
+@author: Aleksandar Mihajlovic 24012903
+@author: Ousmane Abdoulaye Souley 24010437
+"""
 
 import pandas as pd
 

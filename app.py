@@ -1,4 +1,9 @@
-### --- app.py (version finale avec logo, style et placement propre) ---
+"""
+Created on Tue Apr  1 23:09:33 2025
+
+@author: Aleksandar Mihajlovic 24012903
+@author: Ousmane Abdoulaye Souley 24010437
+"""
 
 import streamlit as st
 import pandas as pd
