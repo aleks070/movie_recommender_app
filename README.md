@@ -9,4 +9,4 @@ Ensuite se positioner dans movie_recommender_app/ et lancer streamlit run app.py
 
 Les fonctions se trouvent dans src/ et les donnes dans data/
 
-packages.txt, runtime.txt ainsi que .streamlit/config.toml étaint juste une tentative de faire fonctionner la bibliotheque surprise sur streamlit.io (sans succes)
+packages.txt, runtime.txt ainsi que .streamlit/config.toml étaient juste une tentative de faire fonctionner la bibliotheque surprise sur streamlit.io (sans succes)
