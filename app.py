@@ -1,5 +1,8 @@
+### --- app.py (version finale avec logo, style et placement propre) ---
+
 import streamlit as st
 import pandas as pd
+from PIL import Image
 from src.utils import load_data, get_user_profile
 from src.backend import (
     get_item_user_recommendations,
@@ -10,24 +13,22 @@ from src.backend import (
 )
 from src.sauvegarde import save_user_profile, append_user_history_as_text
 
+
+# Configuration page
 st.set_page_config(page_title="RecoFilms 🎬", layout="wide")
 
-# Style CSS personnalisé pour améliorer le design
+
+# CSS personnalisé (olive + beige + selectbox body #31333F)
 st.markdown("""
     <style>
-    /* Fond principal olive mat */
     html, body, .main {
         background-color: #515744;
         color: white;
         font-family: 'Segoe UI', sans-serif;
     }
-
-    /* Titres plus foncés pour contraste */
-    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
-        color: #f5f5dc;
+    h1, h2, h3, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+        color: #f5f5dc !important;
     }
-
-    /* Boutons principaux (beige avec texte noir) */
     .stButton>button {
         background-color: #f5f5dc;
         color: black;
@@ -36,13 +37,9 @@ st.markdown("""
         padding: 0.6em 1.2em;
         font-size: 1.05em;
     }
-
-    /* Sidebar (on garde ton bleu foncé Streamlit par défaut) */
     section[data-testid="stSidebar"] {
         background-color: #202020;
     }
-
-    /* Boutons dans la sidebar (beige aussi) */
     section[data-testid="stSidebar"] .stButton>button {
         background-color: #f5f5dc;
         color: black;
@@ -50,41 +47,69 @@ st.markdown("""
         border-radius: 8px;
         margin-top: 6px;
     }
-
-    /* Choix déroulants et radios : texte contrasté */
-    .stRadio>div>label, .stSelectbox>div>div {
+    .stRadio>div>label {
         font-weight: bold;
-        color: #fff;
+        color: #f5f5dc;
     }
-
-    /* DataFrame clair avec texte foncé */
+    .stSelectbox > div > div {
+        background-color: #31333F;
+        color: white;
+        font-weight: bold;
+        border-radius: 6px;
+    }
+    section[data-testid="stSidebar"] .stSelectbox > div > div {
+        background-color: #f5f5dc;
+        color: black;
+        font-weight: bold;
+    }
     .stDataFrame {
         background-color: #fff !important;
         color: #000;
     }
-
-    /* Champs texte */
     .stTextInput>div>input {
-        background-color: #fdf6e3;
-        color: black;
+        background-color: #31333F;
+        color: white;
         font-weight: bold;
+        border-radius: 6px;
+    }
+    div[data-baseweb="slider"] {
+        background-color: #31333F;
+        padding: 0.2em;
+        border-radius: 8px;
+    }
+    div[data-baseweb="slider"] .css-1n76uvr {
+        background-color: #f5f5dc;
+    }
+    div[data-baseweb="slider"] .css-14xtw13 {
+        background-color: black;
+    }
+    img {
+        pointer-events: none;
     }
     </style>
 """, unsafe_allow_html=True)
 
 
+# Logo à gauche, titre à droite
+col1, col2 = st.columns([1, 4])
+with col1:
+    st.image("data/logo_recofilms.png", width=175)
+with col2:
+    st.markdown("""
+        <h1 style='color:#f5f5dc; margin-top: 30px;'>RecoFilms</h1>
+        <h3 style='color:#f5f5dc;'>Votre assistant cinéphile intelligent</h3>
+    """, unsafe_allow_html=True)
+
+
+# Entrée utilisateur
+user_name = st.text_input("👤 Entrez votre prénom ou pseudo")
 
 
 # Chargement des données
 df = load_data("data/user_ratings_genres_mov.csv")
 
-# Saisie du nom d'utilisateur
-user_name = st.text_input("🕤 Entrez votre prénom ou pseudo")
 
-# Sélection des films et notes
-st.title("🎬 Application de Recommandation de Films")
-st.write("Notez 3 films pour recevoir des recommandations personnalisées.")
-
+# Saisie de 3 films + notes
 all_titles = df['title'].unique()
 selected_titles, ratings = [], []
 
@@ -102,7 +127,7 @@ else:
     genres = [df[df['title'] == title]['genres'].iloc[0] for title in selected_titles]
     user_profile = get_user_profile(selected_titles, ratings, genres)
 
-    st.markdown("### 🌟 Votre profil utilisateur")
+    st.markdown("### 🎯 Votre profil utilisateur")
     st.dataframe(user_profile)
 
     st.subheader("🔍 Méthode de recommandation")
@@ -131,24 +156,21 @@ else:
                     else:
                         recs = get_content_based_on_best_rated(df, user_profile)
 
-            # Sauvegarde CSV et texte
             save_user_profile(user_profile, method=sub_method)
             append_user_history_as_text(user_name, user_profile, sub_method, recs)
             st.success("✅ Profil utilisateur sauvegardé !")
 
-            # Affichage des recommandations
             recs.index = range(1, len(recs)+1)
             st.markdown("### ⭐ Recommandations")
             st.dataframe(recs)
-            
-            
-# 🔁 Affichage de l'historique utilisateur     
+
+
+# Sidebar - Historique
 st.sidebar.markdown("## 🕓 Historique")
 if st.sidebar.button("📜 Voir l'historique"):
     try:
         with open("data/history.txt", "r", encoding="utf-8") as f:
             full_text = f.read()
-
         sessions = full_text.strip().split("-" * 50)
         for session in sessions:
             if session.strip():
@@ -161,7 +183,6 @@ if st.sidebar.button("📜 Voir l'historique"):
     except FileNotFoundError:
         st.warning("⚠️ Aucun historique trouvé pour le moment.")
 
-#bouton reinitialisation historique
 if st.sidebar.button("🗑️ Réinitialiser l'historique"):
     import os
     if os.path.exists("data/history.txt"):
@@ -169,4 +190,3 @@ if st.sidebar.button("🗑️ Réinitialiser l'historique"):
     if os.path.exists("data/history.csv"):
         os.remove("data/history.csv")
     st.sidebar.success("🧹 Historique réinitialisé avec succès !")
-
